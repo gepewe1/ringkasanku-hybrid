@@ -6,7 +6,7 @@
  * its hybrid inference API:
  *   getAI(app, { backend: new GoogleAIBackend() })
  *   getGenerativeModel(ai, { mode: InferenceMode.PREFER_ON_DEVICE,
- *                            inCloudParams: { model: 'gemini-2.5-flash' } })
+ *                            inCloudParams: { model: 'gemini-3.8-flash' } })
  * PREFER_ON_DEVICE runs Gemini Nano via Chrome's Prompt API when it is
  * available and automatically falls back to the cloud Gemini model
  * otherwise. App Check is initialized first because Firebase AI Logic
