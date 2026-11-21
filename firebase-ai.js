@@ -6,7 +6,7 @@
  * its hybrid inference API:
  *   getAI(app, { backend: new GoogleAIBackend() })
  *   getGenerativeModel(ai, { mode: InferenceMode.PREFER_ON_DEVICE,
- *                            inCloudParams: { model: 'gemini-3.8-flash' } })
+ *                            inCloudParams: { model: 'gemini-3.5-flash-lite' } })
  * PREFER_ON_DEVICE runs Gemini Nano via Chrome's Prompt API when it is
  * available and automatically falls back to the cloud Gemini model
  * otherwise. App Check is initialized first because Firebase AI Logic
@@ -56,13 +56,21 @@ export async function runFirebaseHybrid(prompt) {
 
   const ai = aiModule.getAI(app, { backend: new aiModule.GoogleAIBackend() });
   // Hybrid model: prefer on-device Gemini Nano, fall back to cloud Gemini.
-  // Cloud model: gemini-3.8-flash — gemini-2.5-flash was retired for new
-  // users (live test 2026-11-21 returned 404 "no longer available to new
-  // users" and named this replacement).
+  // Cloud model history (all verified live on 2026-11-21):
+  //  - gemini-2.5-flash: retired for new users (404).
+  //  - gemini-3.8-flash: accepted, but its generateContent call ran ~3 min
+  //    and died with 503 "Deadline expired" on this endpoint — too heavy
+  //    (default medium thinking) for interactive judging.
+  //  - gemini-3.5-flash-lite: current choice — a lite model that answers
+  //    in seconds; the right weight for short note distillation.
   const model = aiModule.getGenerativeModel(ai, {
     mode: aiModule.InferenceMode.PREFER_ON_DEVICE,
-    inCloudParams: { model: 'gemini-3.8-flash' },
+    inCloudParams: { model: 'gemini-3.5-flash-lite' },
   });
-  const result = await model.generateContent(prompt);
+  // Hard timeout: a stuck cloud call must never leave the UI dead — after
+  // 45 s the caller falls back to the local engine with an explanation.
+  const timeout = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error('Firebase AI Logic timed out after 45s')), 45000));
+  const result = await Promise.race([model.generateContent(prompt), timeout]);
   return result.response.text();
 }

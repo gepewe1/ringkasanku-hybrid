@@ -73,6 +73,11 @@ document.querySelectorAll('.task').forEach(btn => {
     const task = btn.dataset.task;
     const text = notesEl.value.trim();
     if (!text) { outputEl.textContent = 'Paste some notes first (or load a sample).'; return; }
+    // Immediate feedback: a cloud call can take seconds — never leave the
+    // result area looking dead while waiting (live-test finding 2026-11-21).
+    document.querySelectorAll('.task').forEach(b => { b.disabled = true; });
+    routeEl.textContent = '⏳ Working — asking the hybrid ladder…';
+    outputEl.textContent = 'Working…';
     caps = await refreshCaps();
     const route = HybridCore.decideRoute(text, caps);
     const prompt = buildPrompt(task, text);
@@ -94,5 +99,6 @@ document.querySelectorAll('.task').forEach(btn => {
     routeEl.innerHTML = `<b>${label}</b><br>Planned route: ${route.rung} — ${route.reason}${note}`;
     outputEl.textContent = answer;
     metaEl.textContent = `${ms} ms · ${HybridCore.tokenize(text).length} words in · ${HybridCore.tokenize(answer).length} words out`;
+    document.querySelectorAll('.task').forEach(b => { b.disabled = false; });
   });
 });
