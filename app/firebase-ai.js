@@ -56,9 +56,12 @@ export async function runFirebaseHybrid(prompt) {
 
   const ai = aiModule.getAI(app, { backend: new aiModule.GoogleAIBackend() });
   // Hybrid model: prefer on-device Gemini Nano, fall back to cloud Gemini.
+  // Cloud model: gemini-3.8-flash — gemini-2.5-flash was retired for new
+  // users (live test 2026-11-21 returned 404 "no longer available to new
+  // users" and named this replacement).
   const model = aiModule.getGenerativeModel(ai, {
     mode: aiModule.InferenceMode.PREFER_ON_DEVICE,
-    inCloudParams: { model: 'gemini-2.5-flash' },
+    inCloudParams: { model: 'gemini-3.8-flash' },
   });
   const result = await model.generateContent(prompt);
   return result.response.text();

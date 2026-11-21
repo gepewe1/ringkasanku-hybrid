@@ -11,11 +11,11 @@ Paste notes (Indonesian or English) and pick a task: **Summarize**, **Key points
 | Rung | Engine | When |
 |---|---|---|
 | 1 | Chrome Prompt API → **Gemini Nano on-device** | Short text, or sensitive-looking text (password/gaji/rahasia/confidential cues) — privacy and zero cost win |
-| 2 | **Firebase AI Logic hybrid model** (`InferenceMode.PREFER_ON_DEVICE`, `inCloudParams: gemini-2.5-flash`) | Long text escalates to cloud Gemini; the SDK itself falls back to on-device when needed. App Check is initialized first, as Firebase AI Logic requires — this project **enforces** App Check, via the reCAPTCHA Enterprise (Fraud Defense) provider |
+| 2 | **Firebase AI Logic hybrid model** (`InferenceMode.PREFER_ON_DEVICE`, `inCloudParams: gemini-3.8-flash`) | Long text escalates to cloud Gemini; the SDK itself falls back to on-device when needed. App Check is initialized first, as Firebase AI Logic requires — this project **enforces** App Check, via the reCAPTCHA Enterprise (Fraud Defense) provider |
 | 3 | Local extractive engine (`app/core.js`) | No Prompt API and no Firebase config: a real frequency/position-scoring summarizer + bilingual (EN/ID) action-cue extractor that runs fully offline, so the demo *never* dead-ends |
 
 ## Firebase AI Logic at runtime (hackathon requirement)
-`app/firebase-ai.js` imports the Firebase JS SDK and **actually calls** `getAI(..., { backend: new GoogleAIBackend() })` and `getGenerativeModel(ai, { mode: InferenceMode.PREFER_ON_DEVICE, inCloudParams: { model: 'gemini-2.5-flash' } })`, then `model.generateContent(prompt)`. `app/firebase-config.js` contains the author's own dedicated hackathon project (`ringkasanku-hybrid`, free Spark plan, no billing): AI Logic is enabled on it and App Check is registered and enforced. A Firebase web config is public by design — access is governed by App Check, not by hiding the config.
+`app/firebase-ai.js` imports the Firebase JS SDK and **actually calls** `getAI(..., { backend: new GoogleAIBackend() })` and `getGenerativeModel(ai, { mode: InferenceMode.PREFER_ON_DEVICE, inCloudParams: { model: 'gemini-3.8-flash' } })`, then `model.generateContent(prompt)`. `app/firebase-config.js` contains the author's own dedicated hackathon project (`ringkasanku-hybrid`, free Spark plan, no billing): AI Logic is enabled on it and App Check is registered and enforced. A Firebase web config is public by design — access is governed by App Check, not by hiding the config.
 
 ## Run it locally (no build, no keys)
 ```bash
