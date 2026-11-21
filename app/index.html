@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RingkasanKu Hybrid — on-device first meeting notes AI</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>🗒️ RingkasanKu <span class="hybrid">Hybrid</span></h1>
+  <p class="tagline">Meeting &amp; field notes, distilled. <strong>On-device first</strong> (private, free, offline-capable), <strong>cloud when it earns it</strong> — powered by Firebase AI Logic hybrid inference.</p>
+  <div id="caps" class="caps">Detecting this browser's AI rungs…</div>
+</header>
+
+<main>
+  <section class="panel">
+    <label for="notes">Your notes (Indonesian or English)</label>
+    <textarea id="notes" rows="12" placeholder="Paste meeting notes, a field report, a long chat thread…"></textarea>
+    <div class="row">
+      <button data-sample="id">Load Indonesian sample</button>
+      <button data-sample="en">Load English sample</button>
+      <span id="counter" class="counter">0 words</span>
+    </div>
+    <div class="row tasks">
+      <button class="task primary" data-task="summary">✂️ Summarize</button>
+      <button class="task" data-task="points">📌 Key points</button>
+      <button class="task" data-task="actions">✅ Action items</button>
+    </div>
+    <p class="privacy">Routing policy: short or sensitive-looking text stays on-device; long text escalates to the Firebase AI Logic hybrid model (cloud Gemini). If neither AI rung exists in this browser, a local extractive engine still answers — fully offline.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Result</h2>
+    <div id="route" class="route">Pick a task to see which rung of the hybrid ladder answers — and why.</div>
+    <pre id="output">Your summary will appear here.</pre>
+    <div class="row">
+      <button id="copy">Copy result</button>
+      <span id="meta" class="counter"></span>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Built for #BuildHybridAI 2026 (Firebase AI Logic). Ladder: Chrome Prompt API / Gemini Nano → Firebase AI Logic hybrid (PREFER_ON_DEVICE → Gemini cloud) → local extractive engine. No keys, no tracking; notes never leave the device unless the cloud rung is used and disclosed above.</p>
+</footer>
+
+<script src="core.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
